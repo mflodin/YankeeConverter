@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
+    android:orientation="vertical"
+	
+     >
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.23" >
-        
+         >
+
         <TextView
             android:id="@+id/txtConvert"
             android:layout_width="fill_parent"
@@ -17,15 +18,15 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:text="@string/convertLabel" />
-        
+
         <EditText
-            android:id="@+id/editUnit"
+            android:id="@+id/editValue"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/txtConvert"
-            android:layout_alignParentLeft="true" 
-			android:numeric="integer|decimal|signed" 
-		>
+            android:numeric="integer|decimal|signed" >
+
             <requestFocus />
         </EditText>
 
@@ -33,9 +34,9 @@
             android:id="@+id/btnToUS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/editUnit"
-            android:text="@string/toUS"
-            android:layout_alignParentLeft="true" />
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/editValue"
+            android:text="@string/toUS" />
 
         <Button
             android:id="@+id/btnToMetric"
@@ -44,7 +45,18 @@
             android:layout_alignTop="@+id/btnToUS"
             android:layout_toRightOf="@+id/btnToUS"
             android:text="@string/toMetric" />
-
     </RelativeLayout>
-
+    
+	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="0dp"
+	    android:orientation="vertical"
+        android:layout_weight="1" 
+	     >
+	    
+	  <ListView android:id="@+id/android:list"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"/>
+	</LinearLayout>
+	
 </LinearLayout>

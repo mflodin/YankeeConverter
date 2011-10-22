@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:orientation="horizontal"
+ 	android:weightSum="1.0" >
+
+    <TextView
+        android:id="@+id/itemUnit"
+   		android:layout_weight=".5"
+ 		android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Unit" />
+
+    <TextView
+        android:id="@+id/itemValue"
+ 		android:layout_weight=".5"
+ 		android:layout_width="wrap_content" 		
+        android:layout_height="wrap_content"
+        android:text="Value" />
+
+</LinearLayout>

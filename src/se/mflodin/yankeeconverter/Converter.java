@@ -1,9 +1,9 @@
 package se.mflodin.yankeeconverter;
 
 public class Converter {
-	final float FAHRENHEIT_OFFSET = 32.0f;
-	final float FAHRENHEIT_FACTOR = 9.0f/5.0f;
-	final float POUND_FACTOR = 0.45359237f;
+	private final float FAHRENHEIT_OFFSET = 32.0f;
+	private final float FAHRENHEIT_FACTOR = 9.0f/5.0f;
+	private final float POUND_FACTOR = 0.45359237f;
 	
 //	public final enum UNITS {
 //		
