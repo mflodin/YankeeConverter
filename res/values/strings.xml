@@ -1,7 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
 
-    <string name="hello">Hello World, YankeeConverterActivity!</string>
+    <string name="convertLabel">Enter value to convert from:</string>
+    <string name="toUS">To US</string>
+    <string name="toMetric">To Metric</string>
     <string name="app_name">YankeeConverter</string>
 
 </resources>

@@ -4,9 +4,47 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:layout_weight="0.23" >
+        
+        <TextView
+            android:id="@+id/txtConvert"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/convertLabel" />
+        
+        <EditText
+            android:id="@+id/editUnit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtConvert"
+            android:layout_alignParentLeft="true" 
+			android:numeric="integer|decimal|signed" 
+		>
+            <requestFocus />
+        </EditText>
+
+        <Button
+            android:id="@+id/btnToUS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/editUnit"
+            android:text="@string/toUS"
+            android:layout_alignParentLeft="true" />
+
+        <Button
+            android:id="@+id/btnToMetric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/btnToUS"
+            android:layout_toRightOf="@+id/btnToUS"
+            android:text="@string/toMetric" />
+
+    </RelativeLayout>
 
 </LinearLayout>
