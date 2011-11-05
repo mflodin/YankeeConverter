@@ -3,14 +3,17 @@
  */
 package se.mflodin.yankeeconverter.test;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
-import se.mflodin.yankeeconverter.*;
+import se.mflodin.yankeeconverter.Converter;
+import se.mflodin.yankeeconverter.Converter.Unit;
 
 /**
  * @author mflodin
  *
  */
 public class ConversionTest extends TestCase {
+	private static final int PRECISION = 10; // used to avoid rounding errors
 	Converter converter;
 
 
@@ -18,99 +21,130 @@ public class ConversionTest extends TestCase {
 		converter = new Converter();
 	}
 	
-	public void testConvertFromFahrenheitToCelsius(){
-		float fahrenheit = 32.0f;
-		float expectedCelsius = 0.0f;
-		float celsius = converter.fahrenheitToCelcius(fahrenheit);
-		assertEquals(expectedCelsius, celsius);
-		
-		fahrenheit = 212.0f;
-		expectedCelsius = 100.0f;
-		celsius = converter.fahrenheitToCelcius(fahrenheit);
+	private double round(double value, int precision){
+		double factor = Math.pow(10, precision);
+		return Math.round(value * factor) / factor;
+	}
+	
+	public void testNotPossibleToConvertBeetweenDifferentTypes(){
+		Unit temp = Unit.CELCIUS;
+		try
+		{
+			temp.in(Unit.METER);
+			Assert.fail("Should have thrown IllegalArgumentException");
+		}
+		catch(IllegalArgumentException e)
+		{
+			//success
+		}
+	}
+	
+	public void testTemperatureConversionCannotUseDefaultConversionMethod(){
+		Unit temp = Unit.CELCIUS;
+		try
+		{
+			temp.in(Unit.FAHRENHEIT);
+			Assert.fail("Should have thrown IllegalArgumentException");
+		}
+		catch(IllegalArgumentException e)
+		{
+			//success
+		}
+	}
+	
+	public void testConvertFromFahrenheitToCelsiusFreezepoint(){
+		double expectedCelsius = 0.0;
+		double celsius = round(Unit.FAHRENHEIT.convertTo(Unit.CELCIUS, 32.0), PRECISION);
 		assertEquals(expectedCelsius, celsius);
 	}
 
-	public void testConvertFromCelsiusToFahrenheit(){
-		float celsius = 100.0f;
-		float expectedFahrenheit = 212.0f;
-		float fahrenheit = converter.celciusToFahrenheit(celsius);
+	public void testConvertFromFahrenheitToCelsiusBoilingpoint(){
+		double expectedCelsius = 100.0;
+		double celsius = round(Unit.FAHRENHEIT.convertTo(Unit.CELCIUS, 212.0), PRECISION);
+		assertEquals(expectedCelsius, celsius);
+	}
+
+	public void testConvertFromCelsiusBoilingpointToFahrenheit(){
+		double expectedFahrenheit = 212.0;
+		double fahrenheit = round(Unit.CELCIUS.convertTo(Unit.FAHRENHEIT, 100.0), PRECISION);
 		assertEquals(expectedFahrenheit, fahrenheit);
-		
-		celsius = 0.0f;
-		expectedFahrenheit = 32.0f;
-		fahrenheit = converter.celciusToFahrenheit(celsius);
+	}
+	
+	public void testConvertFromCelsiusFreezepointToFahrenheit(){
+		double expectedFahrenheit = 32.0;
+		double fahrenheit = round(Unit.CELCIUS.convertTo(Unit.FAHRENHEIT, 0.0), PRECISION);
 		assertEquals(expectedFahrenheit, fahrenheit);
 	}
 	
 	//	Lbs -> kg
 	public void testConvertFromPoundsToKilograms(){
-		float pounds = 1.0f;
-		float expectedKilograms = 0.45359237f;
-		float kilograms = converter.poundsToKilograms(pounds);
+		double pounds = 1.0;
+		double expectedKilograms = 0.45359237;
+		double kilograms = converter.poundsToKilograms(pounds);
 		assertEquals(expectedKilograms, kilograms);
 	}
 	
 	public void testConvertFromKilogramsToPounds(){
-		float kilograms = 1.0f;
-		float expectedPounds = 1 / 0.45359237f;
-		float pounds = converter.kilogramsToPounds(kilograms);
+		double kilograms = 1.0;
+		double expectedPounds = 1 / 0.45359237;
+		double pounds = converter.kilogramsToPounds(kilograms);
 		assertEquals(expectedPounds, pounds);
 	}
 	
 	public void testConvertFromOunceToKilograms(){
-		float ounces = 1.0f;
-		float expectedKilograms = 0.028349523125f;
-		float kilograms = converter.ouncesToKilograms(ounces);
+		double ounces = 1.0;
+		double expectedKilograms = 0.028349523125;
+		double kilograms = converter.ouncesToKilograms(ounces);
 		assertEquals(expectedKilograms, kilograms);
 	}
 	
 	public void testConvertFromKilogramsToOunces() {
-		float kilogram = 1.0f;
-		float expectedOunces = 1 / 0.028349523125f;
-		float ounces = converter.kilogramsToOunces(kilogram);
+		double kilogram = 1.0;
+		double expectedOunces = 1 / 0.028349523125;
+		double ounces = converter.kilogramsToOunces(kilogram);
 		assertEquals(expectedOunces, ounces);
 	}
 	
 	public void testConvertFromGallonsToLiters() {
-		float gallon = 1.0f;
-		float expectedLiters = 3.785412f;
-		float litres = converter.gallonsToLiters(gallon);
+		double gallon = 1.0;
+		double expectedLiters = 3.785412;
+		double litres = converter.gallonsToLiters(gallon);
 		assertEquals(expectedLiters, litres);
 	}
 	
 	public void testConvertFromLitersToGallons() {
-		float liter = 1.0f;
-		float expectedGallons = 1 / 3.785412f;
-		float gallons = converter.litersToGallons(liter);
+		double liter = 1.0;
+		double expectedGallons = 1 / 3.785412;
+		double gallons = converter.litersToGallons(liter);
 		assertEquals(expectedGallons, gallons);
 	}
 	
 	public void testConvertFromMilesToKilometers() {
-		float mile = 1.0f;
-		float expectedKilometers = 1.609344f;
-		float kilometers = converter.milesToKilometers(mile);
+		double mile = 1.0;
+		double expectedKilometers = 1.609344;
+		double kilometers = converter.milesToKilometers(mile);
 		assertEquals(expectedKilometers, kilometers);
 	}
 	
 	public void testConvertFromKilometersToMiles() {
-		float kilometer = 1.0f;
-		float expectedMiles = 1 / 1.609344f;
-		float miles = converter.kilometersToMiles(kilometer);
+		double kilometer = 1.0;
+		double expectedMiles = 1 / 1.609344;
+		double miles = converter.kilometersToMiles(kilometer);
 		assertEquals(expectedMiles, miles);
 	}
 	
 	public void testConvertFromFeetToMeters() {
-		float feet = 1.0f;
-		float expectedMeters = 0.3048f;
-		float meters = converter.feetToMeters(feet);
+		Unit foot = Unit.FOOT;
+		double expectedMeters = 0.3048;
+		double meters = foot.in(Unit.METER);
 		assertEquals(expectedMeters, meters);
 	}
 	
-	public void testConvertFromMetersToFeets() {
-		float meter = 1.0f;
-		float expectedFeets = 1 / 0.3048f;
-		float feet = converter.metersToFeet(meter);
-		assertEquals(expectedFeets, feet);
+	public void testConvertFromMetersToFeet() {
+		Unit meter = Unit.METER;
+		double expectedFeet = 1 / 0.3048;
+		double feet = meter.in(Unit.FOOT);
+		assertEquals(expectedFeet, feet);
 	}
 	
 	

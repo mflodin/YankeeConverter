@@ -76,32 +76,32 @@ public class YankeeConverterActivity extends ListActivity{
         return super.onOptionsItemSelected(item);
     }
 
-	private void populateToMetricList(float value) {
+	private void populateToMetricList(double value) {
 		addItem("lb => kg", converter.poundsToKilograms(value));
 		addItem("°F => °C", converter.fahrenheitToCelcius(value));
 		listAdapter.notifyDataSetChanged();
 	}
 	
-	private void populateToUSList(float value) {
+	private void populateToUSList(double value) {
 		addItem( "kg => lb", converter.kilogramsToPounds(value) );
 		addItem( "°C => °F", converter.celciusToFahrenheit(value) );
 		listAdapter.notifyDataSetChanged();
 	}
 	
-	private void addItem(String label, float value){
+	private void addItem(String label, double value){
 		  HashMap<String,String> listItem = new HashMap<String,String>();
 		  listItem.put( "label", label );
-		  listItem.put( "value", Float.toString(value));
+		  listItem.put( "value", Double.toString(value));
 		  list.add( listItem );
 	}
 	
-	private float getValueFromEditText(){
+	private double getValueFromEditText(){
 		String enteredText = mEditValue.getText().toString();
 		if (enteredText == null || enteredText.length() == 0){
 			return 0f;
 		}
 		
-		return Float.parseFloat(enteredText);
+		return Double.parseDouble(enteredText);
 	
 	}
 
