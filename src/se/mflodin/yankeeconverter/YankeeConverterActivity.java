@@ -27,6 +27,7 @@ public class YankeeConverterActivity extends ListActivity{
     private Button mToUSButton;
     private Button mToMetricButton;
     private EditText mEditValue;
+	private int precision;
     
 
     /** Called when the activity is first created. */
@@ -41,7 +42,7 @@ public class YankeeConverterActivity extends ListActivity{
        float exchangeRateSEK = settings.getFloat(PREFKEY_EXCHANGE_RATE_SEK, DEFAULT_EXCHANGE_RATE_SEK);
        Unit.SEK.setExchangeRate(exchangeRateSEK);
        
-       int precision = settings.getInt(PREFKEY_PRECISION, DEFAULT_PRECISION);
+       precision = settings.getInt(PREFKEY_PRECISION, DEFAULT_PRECISION);
        Unit.precision = precision;
        
        listAdapter = new SimpleAdapter( 
@@ -112,6 +113,8 @@ public class YankeeConverterActivity extends ListActivity{
 		addConversion(Unit.INCH,		Unit.METER, 	value);
 		addConversion(Unit.FAHRENHEIT, 	Unit.CELCIUS, 	value);
 		addConversion(Unit.USD, 		Unit.SEK, 		value);
+		addComparisonConversion(Unit.USD, Unit.POUND, Unit.SEK, Unit.KILOGRAM, value);
+		addComparisonConversion(Unit.USD, Unit.GALLON, Unit.SEK, Unit.LITER, value);
 		listAdapter.notifyDataSetChanged();
 	}
 	
@@ -135,6 +138,8 @@ public class YankeeConverterActivity extends ListActivity{
 		addConversion(Unit.METER, 		Unit.INCH, 			value);
 		addConversion(Unit.CELCIUS, 	Unit.FAHRENHEIT,	value);
 		addConversion(Unit.SEK, 		Unit.USD, 			value);
+		addComparisonConversion(Unit.SEK, Unit.KILOGRAM, Unit.USD, Unit.POUND, value);
+		addComparisonConversion(Unit.SEK, Unit.LITER, Unit.USD, Unit.GALLON, value);
 		listAdapter.notifyDataSetChanged();
 	}
 	
@@ -148,6 +153,15 @@ public class YankeeConverterActivity extends ListActivity{
 	private void addConversion(Unit startUnit, Unit otherUnit, double value){
 		String label = startUnit.abbreviation + " => " + otherUnit.abbreviation;
 		addItem(label, startUnit.convertTo(otherUnit, value));
+	}
+	
+	private void addComparisonConversion(Unit startUnitDividend, Unit startUnitDivisor, 
+			Unit otherUnitDividend, Unit otherUnitDivisor, double value){
+		String label = startUnitDividend.abbreviation + "/" + startUnitDivisor.abbreviation + " => " 
+		+ otherUnitDividend.abbreviation + "/" + otherUnitDivisor.abbreviation;
+		double dividend = startUnitDividend.convertTo(otherUnitDividend, value);
+		double divisor = startUnitDivisor.convertTo(otherUnitDivisor, 1);
+		addItem(label, Unit.round(dividend / divisor, precision));
 	}
 	
 	private double getValueFromEditText(){

@@ -57,7 +57,7 @@ public class Converter {
 			this.siEquivalent = 1 / costOfOneUSD;
 		}
 
-		private double round(double value, int precision){
+		public static double round(double value, int precision){
 			double factor = Math.pow(10, precision);
 			return Math.round(value * factor) / factor;
 		}
