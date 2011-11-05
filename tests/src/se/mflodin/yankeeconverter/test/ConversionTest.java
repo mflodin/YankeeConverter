@@ -7,6 +7,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 import se.mflodin.yankeeconverter.Converter;
 import se.mflodin.yankeeconverter.Converter.Unit;
+import se.mflodin.yankeeconverter.Converter.UnitType;
 
 /**
  * @author mflodin
@@ -19,6 +20,7 @@ public class ConversionTest extends TestCase {
 
 	public ConversionTest() {
 		converter = new Converter();
+		Unit.precision = PRECISION;
 	}
 	
 	private double round(double value, int precision){
@@ -30,20 +32,7 @@ public class ConversionTest extends TestCase {
 		Unit temp = Unit.CELCIUS;
 		try
 		{
-			temp.in(Unit.METER);
-			Assert.fail("Should have thrown IllegalArgumentException");
-		}
-		catch(IllegalArgumentException e)
-		{
-			//success
-		}
-	}
-	
-	public void testTemperatureConversionCannotUseDefaultConversionMethod(){
-		Unit temp = Unit.CELCIUS;
-		try
-		{
-			temp.in(Unit.FAHRENHEIT);
+			temp.convertTo(Unit.METER, 1.0);
 			Assert.fail("Should have thrown IllegalArgumentException");
 		}
 		catch(IllegalArgumentException e)
@@ -78,74 +67,112 @@ public class ConversionTest extends TestCase {
 	
 	//	Lbs -> kg
 	public void testConvertFromPoundsToKilograms(){
-		double pounds = 1.0;
 		double expectedKilograms = 0.45359237;
-		double kilograms = converter.poundsToKilograms(pounds);
+		double kilograms = Unit.POUND.convertTo(Unit.KILOGRAM, 1.0);
 		assertEquals(expectedKilograms, kilograms);
 	}
 	
 	public void testConvertFromKilogramsToPounds(){
-		double kilograms = 1.0;
-		double expectedPounds = 1 / 0.45359237;
-		double pounds = converter.kilogramsToPounds(kilograms);
+		double expectedPounds = round(1 / 0.45359237, PRECISION);
+		double pounds = Unit.KILOGRAM.convertTo(Unit.POUND, 1.0);
 		assertEquals(expectedPounds, pounds);
 	}
 	
 	public void testConvertFromOunceToKilograms(){
-		double ounces = 1.0;
-		double expectedKilograms = 0.028349523125;
-		double kilograms = converter.ouncesToKilograms(ounces);
+		double expectedKilograms = round(0.028349523125, PRECISION);
+		double kilograms = Unit.OUNCE.convertTo(Unit.KILOGRAM, 1.0);
 		assertEquals(expectedKilograms, kilograms);
 	}
 	
 	public void testConvertFromKilogramsToOunces() {
-		double kilogram = 1.0;
-		double expectedOunces = 1 / 0.028349523125;
-		double ounces = converter.kilogramsToOunces(kilogram);
+		double expectedOunces = round(1 / 0.028349523125, PRECISION);
+		double ounces =  Unit.KILOGRAM.convertTo(Unit.OUNCE, 1.0);
 		assertEquals(expectedOunces, ounces);
 	}
 	
 	public void testConvertFromGallonsToLiters() {
-		double gallon = 1.0;
 		double expectedLiters = 3.785412;
-		double litres = converter.gallonsToLiters(gallon);
+		double litres =  Unit.GALLON.convertTo(Unit.LITER, 1.0);
 		assertEquals(expectedLiters, litres);
 	}
 	
 	public void testConvertFromLitersToGallons() {
-		double liter = 1.0;
-		double expectedGallons = 1 / 3.785412;
-		double gallons = converter.litersToGallons(liter);
+		double expectedGallons = round(1 / 3.785412, PRECISION);
+		double gallons =  Unit.LITER.convertTo(Unit.GALLON, 1.0);
 		assertEquals(expectedGallons, gallons);
 	}
 	
 	public void testConvertFromMilesToKilometers() {
-		double mile = 1.0;
 		double expectedKilometers = 1.609344;
-		double kilometers = converter.milesToKilometers(mile);
+		double kilometers =  Unit.MILE.convertTo(Unit.KILOMETER, 1.0);
 		assertEquals(expectedKilometers, kilometers);
 	}
 	
 	public void testConvertFromKilometersToMiles() {
-		double kilometer = 1.0;
-		double expectedMiles = 1 / 1.609344;
-		double miles = converter.kilometersToMiles(kilometer);
+		double expectedMiles = round(1 / 1.609344, PRECISION);
+		double miles =  Unit.KILOMETER.convertTo(Unit.MILE, 1.0);
 		assertEquals(expectedMiles, miles);
 	}
 	
 	public void testConvertFromFeetToMeters() {
-		Unit foot = Unit.FOOT;
 		double expectedMeters = 0.3048;
-		double meters = foot.in(Unit.METER);
+		double meters = Unit.FOOT.convertTo(Unit.METER, 1.0);
+		assertEquals(expectedMeters, meters);
+	}
+
+	public void testConvertFromMetersToFeets() {
+		double expectedFeets = round(1 / 0.3048, PRECISION);
+		double feet = Unit.METER.convertTo(Unit.FOOT, 1.0);
+		assertEquals(expectedFeets, feet);
+	}
+	public void testConvertFromInchesToMeters() {
+		double expectedMeters = 0.0254;
+		double meters = Unit.INCH.convertTo(Unit.METER, 1.0);
 		assertEquals(expectedMeters, meters);
 	}
 	
-	public void testConvertFromMetersToFeet() {
-		Unit meter = Unit.METER;
-		double expectedFeet = 1 / 0.3048;
-		double feet = meter.in(Unit.FOOT);
-		assertEquals(expectedFeet, feet);
+	public void testConvertFromMetersToInches() {
+		double expectedInches = round(1 / 0.0254, PRECISION);
+		double inches = Unit.METER.convertTo(Unit.INCH, 1.0);
+		assertEquals(expectedInches, inches);
 	}
+	
+	public void testCanOnlySetExchangeRateOfCurrencies(){
+		for (Unit u : Unit.values()){
+			try
+			{
+				u.setExchangeRate(100.0);
+				if (u.type != UnitType.CURRENCY)
+					Assert.fail("Should have thrown IllegalArgumentException");
+			}
+			catch(IllegalArgumentException e)
+			{
+				//success
+			}
+		}
+	}
+	
+	public void testCannotSetExchangeRateOfUSD(){
+		try
+		{
+			Unit.USD.setExchangeRate(100.0);
+			Assert.fail("Should have thrown IllegalArgumentException");
+		}
+		catch(IllegalArgumentException e)
+		{
+			//success
+		}
+	}
+	
+	public void testConvertFromUSDToSEK() {
+		Unit.SEK.setExchangeRate(6.58692101);
+		double expectedSEK = 6.58692101;
+		double SEK = Unit.USD.convertTo(Unit.SEK, 1);
+		assertEquals(expectedSEK, SEK);
+	}
+	
+	
+	
 	
 	
 	
